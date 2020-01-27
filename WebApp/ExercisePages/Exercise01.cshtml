@@ -1,8 +1,79 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
     Page.Title = string.Format("Razor - {0}", "Exercise 01");
+
+    var name = Request.Form["LeftSide"];
+
+    var button =  Request.Form["formButton"];
+
+    var meals = Request.Form["meal"];
 }
 
 @section banner {
     <h1>@Page.Title</h1>
 }
+
+@if (IsPost)
+{
+
+    if (button.Equals("reset"))
+    {
+        <p>You have clicked Reset.</p>
+        name = "";
+        meals = "";
+    }
+    else
+    {
+        if (string.IsNullOrEmpty(name) || meals.IsEmpty())
+        {
+            <p>You must fill in the form properly.</p>
+        }
+        else
+        {
+            <p>@name , I see you like to have the following meal entries:</p>
+            <ul>
+                @foreach (var meal in meals.Split(','))
+                {
+                    <li>@meal</li>
+                }
+            </ul>
+        }
+    }
+}
+
+
+
+
+
+
+
+<form id="theForm" action="" method="post">
+    <div class="row">
+        <!--with the grid system in bootstrap all divs are divided into 12 columns-->
+        <div class="col-sm-6">
+            <!--so col-sm-6 means take up 6 of the 12 columns or half the screen. sm means small screen-->
+            <label id="forLeftSide">Customer Name:</label>&nbsp;&nbsp;
+            <br /><br />
+            <input type="text" name="LeftSide" id="LeftSideId"
+                   value="@name" placeholder="Your Name" />&nbsp;&nbsp;
+            <br /> <br />
+            <button type="submit" name="formButton" value="submit"
+                    class="btn btn-primary">
+                Submit
+            </button>
+
+            <button type="Reset" name="formButton" value="reset"
+                    class="btn btn-secondary">
+                Reset
+            </button>
+        </div>
+
+        <div class="col-sm-6">
+            <label id="meal">Choose your meal items</label><br />
+            <input type="checkbox" name="meal" value="Steak" />Steak<br />
+            <input type="checkbox" name="meal" value="Seafood" />Seafood<br />
+            <input type="checkbox" name="meal" value="Vegetables" />Vegetables<br />
+
+        </div>
+    </div>
+</form>
