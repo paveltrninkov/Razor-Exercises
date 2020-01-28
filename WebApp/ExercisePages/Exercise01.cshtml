@@ -2,11 +2,11 @@
     Layout = "~/_Layout.cshtml";
     Page.Title = string.Format("Razor - {0}", "Exercise 01");
 
-    var name = Request.Form["LeftSide"];
+    var name = Request.Form["Name"];
 
     var button =  Request.Form["formButton"];
 
-    var meals = Request.Form["meal"];
+    var meals = Request.Form["Meal"];
 }
 
 @section banner {
@@ -53,8 +53,8 @@
         <div class="col-sm-6">
             <!--so col-sm-6 means take up 6 of the 12 columns or half the screen. sm means small screen-->
             <label id="forLeftSide">Customer Name:</label>&nbsp;&nbsp;
-            <br /><br />
-            <input type="text" name="LeftSide" id="LeftSideId"
+            <br /> <br />
+            <input type="text" name="Name" id="Name"
                    value="@name" placeholder="Your Name" />&nbsp;&nbsp;
             <br /> <br />
             <button type="submit" name="formButton" value="submit"
@@ -62,17 +62,17 @@
                 Submit
             </button>
 
-            <button type="Reset" name="formButton" value="reset"
-                    class="btn btn-secondary">
+            <button type="submit" id="formButton" name="formButton" value="reset"
+                    class="btn btn-outline-secondary">
                 Reset
             </button>
         </div>
 
         <div class="col-sm-6">
             <label id="meal">Choose your meal items</label><br />
-            <input type="checkbox" name="meal" value="Steak" />Steak<br />
-            <input type="checkbox" name="meal" value="Seafood" />Seafood<br />
-            <input type="checkbox" name="meal" value="Vegetables" />Vegetables<br />
+            <input type="checkbox" name="Meal" value="Steak" />Steak<br />
+            <input type="checkbox" name="Meal" value="Seafood" />Seafood<br />
+            <input type="checkbox" name="Meal" value="Vegetables" />Vegetables<br />
 
         </div>
     </div>
