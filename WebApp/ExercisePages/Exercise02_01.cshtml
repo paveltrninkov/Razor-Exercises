@@ -1,0 +1,49 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = string.Format("Razor - {0}", "Exercise 02");
+
+    // artist variable
+    var artist = Request.Form["Name"];
+}
+
+@section banner {
+    <h1>@Page.Title</h1>
+}
+
+
+@if (IsPost)
+{
+    if (string.IsNullOrEmpty(artist))
+    {
+        <p>You must write down an artist's name.</p>
+    }
+    else
+    {
+
+    }
+}
+
+
+
+<form id="theForm" action="" method="post">
+    <div class="row">
+        <!--with the grid system in bootstrap all divs are divided into 12 columns-->
+        <div class="col-sm-6">
+            <!--so col-sm-6 means take up 6 of the 12 columns or half the screen. sm means small screen-->
+            <label id="forLeftSide">Artist Name:</label>&nbsp;&nbsp;
+            <br /> <br />
+            <input type="text" name="Name" id="Name"
+                   value="@artist" placeholder="Artist's Name" />&nbsp;&nbsp;
+            <br /> <br />
+            <button type="submit" name="formButton" value="submit"
+                    class="btn btn-primary">
+                Submit
+            </button>
+
+            <button type="submit" id="formButton" name="formButton" value="reset"
+                    class="btn btn-outline-secondary">
+                Reset
+            </button>
+        </div>
+    </div>
+</form>
