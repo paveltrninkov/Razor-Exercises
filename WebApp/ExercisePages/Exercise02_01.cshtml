@@ -5,6 +5,15 @@
     // artist variable + button
     var artist = Request.Form["Name"];
     var button = Request.Form["formButton"];
+
+    // open database
+    var db = Database.Open("Chinook");
+
+    // search database variables
+    string sql = "Select ArtistID FROM Artists Where Name like @0";
+
+    //does the artist exist?
+    var result = db.Query(sql, "%" + artist + "%");
 }
 
 @section banner {
@@ -26,6 +35,10 @@
         {
             <p>You must write down an artist's name.</p>
             artist = "";
+        }
+        else if (result.Count() == 0)
+        {
+            <p>There are no records of that artist.</p>
         }
         else
         {
