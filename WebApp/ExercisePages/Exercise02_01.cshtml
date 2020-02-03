@@ -2,9 +2,9 @@
     Layout = "~/_Layout.cshtml";
     Page.Title = string.Format("Razor - {0}", "Exercise 02");
 
-    // artist variable
+    // artist variable + button
     var artist = Request.Form["Name"];
-    var button = 
+    var button = Request.Form["formButton"];
 }
 
 @section banner {
@@ -14,18 +14,29 @@
 
 @if (IsPost)
 {
-    if (string.IsNullOrEmpty(artist))
+    // if reset
+    if (button.Equals("reset"))
     {
-        <p>You must write down an artist's name.</p>
+        <p>The reset button was pressed</p>
     }
     else
     {
-
+        // if empty
+        if (string.IsNullOrEmpty(artist))
+        {
+            <p>You must write down an artist's name.</p>
+            artist = "";
+        }
+        else
+        {
+            // redirect to next page
+            Response.Redirect("Exercise02_02.cshtml?cid=" + artist);
+        }
     }
 }
 
 
-
+@* form *@
 <form id="theForm" action="" method="post">
     <div class="row">
         <!--with the grid system in bootstrap all divs are divided into 12 columns-->

@@ -1,5 +1,36 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
+    Page.Title = string.Format("Razor - Exercise02 pt.2");
+
+    // pull info from previous page
+    var cid = Request.QueryString["cid"];
+
+    // if cid is null
+    if (string.IsNullOrEmpty(cid))
+    {
+        Response.Redirect("Exercise02_01.cshtml");
+    }
+
+    // pull database
+    var db = Database.Open("Chinook");
+
+
+    // SQL command
+    var partialstring = "%" + cid + "%";
+    string sql = "Select ArtistId FROM Artists Where Name like @0";
+
+    // pull results from database
+    var artists = db.Query(sql, partialstring);
+
+    // if empty
+    if (artists.Count() == 0)
+    {
+        <p>There are no records of any artists with that name.</p>
+    }
+    else
+    {
+        
+    }
 }
 
 
