@@ -1,0 +1,140 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = string.Format("Razor - Exercise03");
+
+    var db = Database.Open("Chinook");
+
+    string insertsql = "insert into Albums (Title, ArtistId, ReleaseYear, ReleaseLabel)" +
+                " values(@0, @1, @2, @3)";
+
+    string artistsql = "select ArtistId, Name from Artists Order By Name";
+
+    var artists = db.Query(artistsql);
+
+    var title = "";
+    var artistid = "";
+    var releaseYear = "";
+    var releaseLabel = "";
+
+    var button = Request.Form["FormButton"];
+
+    // Validation
+
+    Validation.Add("Title",
+    Validator.Required("Title name is required"),
+    Validator.StringLength(160, 1, "Title is limited to 160 characters"));
+
+    Validation.Add("ArtistList",
+    Validator.Required("Artist is required"),
+    Validator.Range(1, double.MaxValue, "Artist is required"));
+
+    Validation.Add("ReleaseYear",
+    Validator.Required("Release Year is required"),
+    Validator.Integer("Year must be a number."),
+    Validator.Range(0.00, DateTime.Today.Year, "Year must be between 1950 and now"));
+
+    Validation.Add("ReleaseLabel",
+    Validator.Required("Release Label is required"),
+    Validator.StringLength(50, 1, "Label is limited to 160 characters"));
+
+
+
+}
+
+
+
+@if (IsPost)
+{
+    title = Request.Form["Title"];
+    artistid = Request.Form["ArtistList"];
+    releaseYear = Request.Form["ReleaseYear"];
+    releaseLabel = Request.Form["ReleaseLabel"];
+
+    if (button.Equals("Clear"))
+    {
+        title = "";
+        artistid = "";
+        releaseYear = "";
+        releaseLabel = "";
+    }
+    else
+    {
+        if (Validation.IsValid())
+        {
+            try
+            {
+                db.Execute(insertsql, title, artistid, releaseYear, releaseLabel);
+                <div class="col-12 text-center">
+                    <p style="color:green">
+                        Product has been ADDED
+                    </p>
+                </div>
+            }
+            catch (Exception ex)
+            {
+                <div class="col-12 text-center">
+                    <p style="color:firebrick; font-size:large">
+                        Processing error: @ex.Message
+                    </p>
+                </div>
+            }
+        }
+    }
+}
+
+@section banner
+{
+    <h1>@Page.Title</h1>
+}
+
+
+@Html.ValidationSummary()
+<form id="theForm" action="" method="post">
+    <div class="row row-cols-2">
+        <div class="col text-right">
+            <label id="lblProductName" for="Title">Title:</label>
+        </div>
+        <div class="col text-left">
+            <input type="text" name="Title" value="@title" />
+        </div><br />
+        <div class="col text-right">
+            <label id="lblSupplierList" for="ArtistList">Artist:</label>
+        </div>
+        <select id="ArtistList" name="ArtistList">
+            <option value="0">select ....</option>
+            @foreach (var artist in artists)
+            {
+                //walk through the record collection of Category records
+                //for each record in the collection you will create an option line
+                //the display text will be the CategoryName
+                //the value attribute will use the CategoryID (FKey on Products)
+                //reminder of data access on a record
+                // a) index   syntax item[index]
+                // b) property name  syntax item.PropertyName (column title on the SQL select)
+                <option value="@artist.ArtistId">@artist.Name</option>
+            }
+        </select>
+        <div class="col text-right">
+            <label id="lblQuantityPerUnit" for="ReleaseYear">Year:</label>
+        </div>
+        <div class="col text-left">
+            <input type="text" name="ReleaseYear" value="@releaseYear" />
+        </div><br />
+        <div class="col text-right">
+            <label id="lblUnitPrice" for="ReleaseLabel">Label</label>
+        </div>
+        <div class="col text-left">
+            <input type="text" name="ReleaseLabel" value="@releaseLabel" />
+        </div><br />
+
+
+    </div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <input type="submit" id="FormButton" name="FormButton"
+                   class="btn btn-primary" value="Add" />
+            <input type="submit" id="FormButton" name="FormButton" formnovalidate
+                   class="btn" value="Clear" />
+        </div>
+    </div>
+</form>
