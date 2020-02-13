@@ -1,6 +1,17 @@
 ﻿@{
     Layout = "~/_Layout.cshtml";
     Page.Title = string.Format("Razor - Exercise02 pt.2");
+    var db = Database.Open("Chinook");
+
+    var albumsql = "Select Title, AlbumId from Albums Order By Title";
+    var albums = db.Query(albumsql);
+
+    var releaseYear;
+    var artistName;
+    var title;
+    var releaseLabel;
+
+
 }
 
 @section banner
