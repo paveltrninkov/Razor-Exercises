@@ -1,0 +1,44 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = string.Format("Razor - Exercise04 Choose");
+
+    var cid = Request.QueryString["cid"];
+
+    if (string.IsNullOrEmpty(cid))
+    {
+        Response.Redirect("Exercise04_Search");
+    }
+
+    string partialstring = "%" + cid + "%";
+
+    var db = Database.Open("Chinook");
+
+    string sql = "Select AlbumId, Title, ReleaseYear, ReleaseLabel FROM Albums Where Title like @0";
+
+    var albums = db.Query(sql, partialstring);
+
+    var gridinstance = new WebGrid(albums, rowsPerPage: 5);
+
+}
+
+@section banner
+{
+    <h1>@Page.Title</h1>
+}
+
+<div class="offset-1">
+    <h3>Albums</h3>
+    <div class="col-11">
+        @gridinstance.GetHtml(
+            tableStyle: "table table-striped table-bordered table-hover",
+            mode: WebGridPagerModes.All,
+            firstText: "Start",
+            lastText: "Ends",
+            columns: gridinstance.Columns(
+               gridinstance.Column(columnName: "AlbumId", header: "ID"),
+               gridinstance.Column(columnName: "Title", header: "Title"),
+               gridinstance.Column(columnName: "ReleaseYear", header: "Release Year", canSort: false),
+               gridinstance.Column(columnName: "ReleaseLabel", header: "Label", canSort: false),
+               gridinstance.Column(header:"", format:@<text><a href="Exercise04_Update.cshtml?cid=@item.AlbumId">Edit</a></text>)))
+    </div>
+</div>

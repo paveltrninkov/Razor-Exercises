@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = string.Format("Razor - Exercise4 Search");
+    var db = Database.Open("Chinook");
+
+    var album = Request.Form["AlbumName"];
+
+    var button = Request.Form["formButton"];
+
+
+}
+
+@if (IsPost)
+{
+    if (button.Equals("reset"))
+    {
+        album = "";
+        <p>Cleared</p>
+    }
+    else
+    {
+        if (string.IsNullOrEmpty(album))
+        {
+            <p>You must put in an album</p>
+        }
+        else
+        {
+            Response.Redirect("Exercise04_Choose.cshtml?cid=" + album);
+        }
+    }
+}
+
+@section banner
+{
+    <h1>@Page.Title</h1>
+}
+
+
+
+
+@* form *@
+<form id="theForm" action="" method="post">
+    <div class="row">
+        <!--with the grid system in bootstrap all divs are divided into 12 columns-->
+        <div class="col-sm-6">
+            <!--so col-sm-6 means take up 6 of the 12 columns or half the screen. sm means small screen-->
+            <label id="forLeftSide">Album Name:</label>&nbsp;&nbsp;
+            <br /> <br />
+            <input type="text" name="AlbumName" id="AlbumName"
+                   value="@album" placeholder="Album Name" />&nbsp;&nbsp;
+            <br /> <br />
+            <button type="submit" name="formButton" value="submit"
+                    class="btn btn-primary">
+                Submit
+            </button>
+
+            <button type="submit" id="formButton" name="formButton" value="reset"
+                    class="btn btn-outline-secondary">
+                Clear
+            </button>
+        </div>
+    </div>
+</form>

@@ -130,7 +130,9 @@
     <Content Include="ExercisePages\Exercise02_02.cshtml" />
     <Content Include="ExercisePages\Exercise02_03.cshtml" />
     <Content Include="ExercisePages\Exercise03.cshtml" />
-    <Content Include="ExercisePages\Exercise04.cshtml" />
+    <Content Include="ExercisePages\Exercise04_Search.cshtml" />
+    <Content Include="ExercisePages\Exercise04_Update.cshtml" />
+    <Content Include="ExercisePages\Exercise04_Choose.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

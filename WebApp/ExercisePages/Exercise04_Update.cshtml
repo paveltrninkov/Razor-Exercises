@@ -1,0 +1,133 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.Title = string.Format("Razor - Exercise04 Update");
+
+    var cid = Request.QueryString["cid"];
+
+    var db = Database.Open("Chinook");
+
+    string deletesql = "delete Albums where AlbumId = @0";
+    string updatesql = "update Albums set Title = @0 , ArtistId = @1 , ReleaseYear = @2 , ReleaseLabel = @3 where AlbumId = @4";
+
+    string sql = "Select Title, ArtistId, ReleaseYear, ReleaseLabel FROM Albums Where AlbumId = @0";
+
+
+    var title = Request.Form["Title"];
+    var artistId = Request.Form["ArtistId"];
+    var releaseYear = Request.Form["ReleaseYear"];
+    var releaseLabel = Request.Form["ReleaseLabel"];
+
+    var albums = db.Query(sql, cid);
+
+    var button = Request.Form["theButton"];
+
+    Validation.Add("Title",
+    Validator.Required("Title name is required"),
+    Validator.StringLength(160, 1, "Title is limited to 160 characters"));
+
+    Validation.Add("ArtistId",
+    Validator.Required("ArtistId is required"),
+    Validator.Range(1, double.MaxValue, "ArtistId is required"));
+
+    Validation.Add("ReleaseLabel",
+    Validator.StringLength(50, 1, "Label is limited to 160 characters"));
+}
+
+@section banner
+{
+    <h1>@Page.Title</h1>
+}
+
+
+@if (IsPost)
+{
+    if (button.Equals("cancel"))
+    {
+        Response.Redirect("Exercise04_Search");
+    }
+    else
+    {
+        if (Validation.IsValid())
+        {
+            if (button.Equals("update"))
+            {
+                try
+                {
+                    db.Execute(updatesql, title, artistId, releaseYear, releaseLabel, cid);
+                    <p>Updated!!</p>
+                }
+                catch (Exception ex)
+                {
+                    <div class="col-12 text-center">
+                        <p style="color:firebrick; font-size:large">
+                            Processing error: @ex.Message
+                        </p>
+                    </div>
+                }
+            }
+            else if (button.Equals("delete"))
+            {
+                try
+                {
+                    db.Execute(deletesql, cid);
+                    <p>Deleted..</p>
+                }
+                catch (Exception ex)
+                {
+                    <div class="col-12 text-center">
+                        <p style="color:firebrick; font-size:large">
+                            Processing error: @ex.Message
+                        </p>
+                    </div>
+                }
+            }
+        }
+    }
+}
+
+@Html.ValidationSummary()
+<div class="form-group">
+
+    <form id="theForm" action="" method="post">
+        <div class="row">
+            <div class="col-6 text-right">
+                <label id="lblTitle" for="Title">Title</label><br />
+                <label id="lblArtistId" for="ArtistId">Artist ID</label><br />
+                <label id="lblReleaseYear" for="ReleaseYear">Release Year</label><br />
+                <label id="lblReleaseLabel" for="ReleaseLabel">Release Label</label><br />
+                <label id="lblId" for="AlbumId">AlbumId</label><br />
+            </div>
+            <div class="col-6 text-left">
+                <input type="text" name="Title" value="@title"/><br />
+                <input type="number" name="ArtistId" value="@artistId" min="0.00" step="1" /><br />
+                <input type="number" name="ReleaseYear" value="@releaseYear" min="1950" max="@DateTime.Today.Year" step="1" /><br />
+                <input type="text" name="ReleaseLabel" value="@releaseLabel" /><br />
+                <input type="text" name="AlbumId" value="@cid" readonly/><br />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center">
+                <button type="submit" name="theButton" id="theUpdate" class="btn btn-primary"
+                        value="update">
+                    Update
+                </button>&nbsp;&nbsp;&nbsp;
+                <button type="submit" name="theButton" id="theDelete" class="btn btn-primary" formnovalidate
+                        value="delete">
+                    Delete
+                </button>&nbsp;&nbsp;&nbsp;
+                <button type="submit" name="theButton" id="theCancel" class="btn btn-primary" formnovalidate
+                        value="cancel">
+                    Cancel
+                </button>
+            </div>
+        </div>
+        @* confirmation can be done on a button click using javascript
+            we will ask the user to confirm the discontinuing of a product*@
+        <script type="text/javascript">
+            document.getElementById("theDelete").onclick = ConfirmDelete;
+            function ConfirmDelete() {
+                return confirm("Are you sure you want to delete?");
+            }
+        </script>
+    </form>
+</div>
