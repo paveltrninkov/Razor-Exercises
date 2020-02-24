@@ -11,15 +11,9 @@
 
     string sql = "Select Title, ArtistId, ReleaseYear, ReleaseLabel FROM Albums Where AlbumId = @0";
 
+    var albums = db.QuerySingle(sql, cid);
 
-    var title = Request.Form["Title"];
-    var artistId = Request.Form["ArtistId"];
-    var releaseYear = Request.Form["ReleaseYear"];
-    var releaseLabel = Request.Form["ReleaseLabel"];
 
-    var albums = db.Query(sql, cid);
-
-    var button = Request.Form["theButton"];
 
     Validation.Add("Title",
     Validator.Required("Title name is required"),
@@ -31,6 +25,13 @@
 
     Validation.Add("ReleaseLabel",
     Validator.StringLength(50, 1, "Label is limited to 160 characters"));
+
+
+    var button = Request.Form["theButton"];
+    var title = Request.Form["Title"];
+    var artistId = Request.Form["ArtistId"];
+    var releaseYear = Request.Form["ReleaseYear"];
+    var releaseLabel = Request.Form["ReleaseLabel"];
 }
 
 @section banner
@@ -41,6 +42,9 @@
 
 @if (IsPost)
 {
+
+
+
     if (button.Equals("cancel"))
     {
         Response.Redirect("Exercise04_Search");
@@ -84,6 +88,13 @@
         }
     }
 }
+else
+{
+    title = albums.Title;
+    artistId = albums.ArtistId == null ? "0" : albums.ArtistId.ToString();
+    releaseYear = albums.ReleaseYear == null ? "" : albums.ReleaseYear.ToString();
+    releaseLabel = albums.ReleaseLabel;
+}
 
 @Html.ValidationSummary()
 <div class="form-group">
@@ -98,11 +109,11 @@
                 <label id="lblId" for="AlbumId">AlbumId</label><br />
             </div>
             <div class="col-6 text-left">
-                <input type="text" name="Title" value="@title"/><br />
+                <input type="text" name="Title" value="@title" /><br />
                 <input type="number" name="ArtistId" value="@artistId" min="0.00" step="1" /><br />
                 <input type="number" name="ReleaseYear" value="@releaseYear" min="1950" max="@DateTime.Today.Year" step="1" /><br />
                 <input type="text" name="ReleaseLabel" value="@releaseLabel" /><br />
-                <input type="text" name="AlbumId" value="@cid" readonly/><br />
+                <input type="text" name="AlbumId" value="@cid" readonly /><br />
             </div>
         </div>
         <div class="row">
@@ -131,3 +142,5 @@
         </script>
     </form>
 </div>
+
+@* hello *@
